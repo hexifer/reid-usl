@@ -25,6 +25,7 @@ class LatentPredictHead(nn.Module):
             dict[str, Tensor]: A dictionary of loss components.
         """
         pred = self.predictor([inputs])[0]
-        loss = -F.cosine_similarity(pred, targets.detach(), dim=-1).mean()
+        loss = -F.cosine_similarity(
+            pred, targets.clone().detach(), dim=-1).mean()
 
         return dict(loss=loss)

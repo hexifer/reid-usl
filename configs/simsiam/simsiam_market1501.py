@@ -17,14 +17,6 @@ model = dict(
         with_bias=False,
         with_avg_pool=True,
         avgpool=dict(type='AvgPoolNeck')),
-    # neck=dict(
-    #     type='Projection',
-    #     in_channels=2048,
-    #     hid_channels=2048,
-    #     out_channels=2048,
-    #     num_layers=3,
-    #     with_avg_pool=True,
-    #     avgpool=dict(type='AvgPoolNeck')),
     head=dict(
         type='LatentPredictHead',
         predictor=dict(
@@ -75,7 +67,7 @@ test_pipeline = [
         std=[0.229, 0.224, 0.225])
 ]
 data = dict(
-    samples_per_gpu=64,  # 64 x 8 = 512
+    samples_per_gpu=32,
     workers_per_gpu=4,
     train=dict(
         type=dataset_type, data_source=data_source, pipeline=train_pipeline),
@@ -86,6 +78,13 @@ data = dict(
         test_mode=True))
 
 optimizer = dict(type='SGD', lr=0.1, weight_decay=0.0001, momentum=0.9)
-lr_config = dict(policy='step', step=[40])
-log_config = dict(interval=10)
-total_epochs = 60
+# learning policy
+lr_config = dict(
+    policy='CosineAnnealing',
+    min_lr=0.,
+    warmup='linear',
+    warmup_iters=2,
+    warmup_ratio=0.0001,  # cannot be 0
+    warmup_by_epoch=True)
+lr_config = dict(interval=20)
+total_epochs = 100
