@@ -47,12 +47,12 @@ test_pipeline = [
         std=[0.229, 0.224, 0.225])
 ]
 data = dict(
-    samples_per_gpu=32,  # 32 x 2 = 64
+    samples_per_gpu=32,
     workers_per_gpu=4,
     sampler=dict(
         type='FixedStepIdentitySampler',
         num_instances=4,
-        step=400,
+        step=100,
         with_camid=True),
     train=dict(
         type=dataset_type, data_source=data_source, pipeline=train_pipeline),
@@ -76,9 +76,15 @@ custom_hooks = [
             type='SelfPacedGenerator',
             eps=[0.58, 0.6, 0.62],
             min_samples=4,
-            k1=20,
+            k1=30,
             k2=6))
 ]
-optimizer = dict(type='Adam', lr=0.00035, weight_decay=5e-4)
-lr_config = dict(policy='step', step=[20, 40])
-total_epochs = 50
+paramwise_cfg = {'backbone': dict(lr_mult=0.1)}
+optimizer = dict(
+    type='SGD',
+    lr=0.1,
+    weight_decay=5e-4,
+    momentum=0.9,
+    paramwise_cfg=paramwise_cfg)
+lr_config = dict(policy='step', step=[40])
+total_epochs = 60
