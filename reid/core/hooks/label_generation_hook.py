@@ -35,7 +35,23 @@ class LabelGenerationHook(Hook):
 
         return labels.cuda()
 
+    def gen_flag(self, runner):
+        if self.start is None:
+            if not self.every_n_epochs(runner, self.interval):
+                return False  # No evaluation
+        elif (runner.epoch + 1) < self.start:
+            # No evaluation if start is larger than the current epoch.
+            return False
+        else:
+            # Evaluation only at epochs 3, 5, 7... if start==3 and interval==2
+            if (runner.epoch + 1 - self.start) % self.interval:
+                return False
+        return True
+
     def before_train_epoch(self, runner):
+        if not self.gen_flag(runner):
+            return
+
         with torch.no_grad():
             feats = self.extractor.extract_feats(runner.model)
             if self.distributed:

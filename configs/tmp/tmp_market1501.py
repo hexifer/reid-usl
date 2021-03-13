@@ -95,7 +95,9 @@ custom_hooks = [
             eps=[0.75],
             min_samples=4,
             k1=20,
-            k2=6))
+            k2=6),
+        start=1,
+        interval=2)
 ]
 # optimizer
 paramwise_cfg = {'backbone': dict(lr_mult=0.1)}
@@ -113,4 +115,4 @@ lr_config = dict(
     warmup_iters=2,
     warmup_ratio=0.0001,  # cannot be 0
     warmup_by_epoch=True)
-total_epochs = 60
+total_epochs = 100
