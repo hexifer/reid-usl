@@ -78,7 +78,13 @@ data = dict(
         test_mode=True))
 
 custom_hooks = [dict(type='SetEpochHook')]
-optimizer = dict(type='SGD', lr=0.1, weight_decay=0.0001, momentum=0.9)
+paramwise_cfg = {'backbone': dict(lr_mult=0.1)}
+optimizer = dict(
+    type='SGD',
+    lr=0.1,
+    weight_decay=0.0001,
+    momentum=0.9,
+    paramwise_cfg=paramwise_cfg)
 # learning policy
 lr_config = dict(
     policy='CosineAnnealing',
