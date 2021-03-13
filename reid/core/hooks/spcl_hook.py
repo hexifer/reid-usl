@@ -56,7 +56,8 @@ class SpCLHook(Hook):
 
         labels = labels.clone().detach().cpu().numpy()
         runner.data_loader.dataset.update_labels(labels)
-        runner.data_loader.sampler.init_data()
+        if hasattr(runner.data_loader.sampler, 'init_data'):
+            runner.data_loader.sampler.init_data()
 
         self.evaluate(runner, labels)
 
