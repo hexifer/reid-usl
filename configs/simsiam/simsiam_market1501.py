@@ -77,6 +77,7 @@ data = dict(
         pipeline=test_pipeline,
         test_mode=True))
 
+custom_hooks = [dict(type='SetEpochHook')]
 optimizer = dict(type='SGD', lr=0.1, weight_decay=0.0001, momentum=0.9)
 # learning policy
 lr_config = dict(
